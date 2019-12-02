@@ -1,0 +1,7 @@
+﻿EnergyType                      能源种类
+MajorPollutantCategories        主要污染物类别
+PollutantTreatmentFacilities    污染物治理设施
+EnvironmentalPetitionSituation  环境信访情况
+SpecialTreatment                专项治理
+
+
