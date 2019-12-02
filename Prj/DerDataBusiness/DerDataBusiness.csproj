@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoService.cs" />
+    <Compile Include="IAutoService.cs" />
     <Compile Include="ProcessService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
