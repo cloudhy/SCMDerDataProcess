@@ -92,9 +92,11 @@ namespace DerDataBusiness
         {
             using (SqlConnection connDB = new SqlConnection(conn))
             {
+                var transaction = connDB.BeginTransaction();
                 try
                 {
-                    connDB.Open();
+                    connDB.Open();                    
+                    
                     string queryDerDataSql = String.Format("SELECT DBId,Name,AccessType,AccessKey,Des FROM DerDataInfo WHERE Id={0}", derdataid);
 
                     var derDatainfo = connDB.Query<DerDataInfo>(queryDerDataSql).FirstOrDefault();
@@ -121,11 +123,56 @@ namespace DerDataBusiness
 
                     connDB.Insert(dbsinfo);
 
+                    string sqlExcuteIPara = String.Format("  INSERT INTO DBSIParams SELECT NEWID() AS [ID] ," +
+                        "'{0}' AS [DId] " +
+                        ",[PKey] ,[Name] ," +
+                        "[SN] ," +
+                        "[Dtp] ," +
+                        "[IsRequired] ," +
+                        "[Local] ," +
+                        "[Des] ," +
+                        "[DefaultValue] ," +
+                        "[Unit] ," +
+                        "[BZ] ," +
+                        "[IsAble] FROM [DerDataIParams] WHERE Id='{1}'",
+                        dbsinfo.Id,
+                        derdataid
+                        );
 
+
+                    string sqlExcuteOPara = String.Format("  INSERT INTO DBSOParams SELECT NEWID() AS [ID] ," +
+                        "'{0}' AS [DId] " +
+                        ",[PKey] ,[Name] ," +
+                        "[SN] ," +
+                        "[Dtp] ," +
+                        "[IsRequired] ," +
+                        "[Local] ," +
+                        "[Des] ," +
+                        "[DefaultValue] ," +
+                        "[Unit] ," +
+                        "[BZ] ," +
+                        "[IsAble] FROM [DerDataOParams] WHERE Id='{1}'",
+                        dbsinfo.Id,
+                        derdataid
+                        );
+
+                    int resultIPara = connDB.Execute(sqlExcuteIPara);
+                    int resultOPara = connDB.Execute(sqlExcuteIPara);
+
+                    if (resultIPara >= 0 && resultOPara >= 0)
+                    {
+                        transaction.Commit();
+                        return true;
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                    }
+                       
                 }
                 catch(Exception ex)
                 {
-
+                    transaction.Rollback();
                 }
                 finally
                 {
@@ -136,7 +183,7 @@ namespace DerDataBusiness
 
             }
 
-            throw new NotImplementedException();
+            return false;
         }
 
         private bool  SyncDerDataToDB(string derdataid,string dbsid)
