@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using Dapper;
 
 namespace DerDataModel
 {
@@ -13,8 +14,10 @@ namespace DerDataModel
         bool isRequired { get; }
     }
 
+    [Table("PropertyInfo")]
     public class PropertyInfo
     {
+        [Key]
         public string Id { get; set; }
         public string UID { get; set; }
         public string TbName { get; set; }
@@ -43,8 +46,10 @@ namespace DerDataModel
         public string ConnStr { get; set; }
     }
 
+    [Table("DBSInfo")]
     public class DBSInfo
     {
+        [Key]
         public string Id { get; set; }
         public string UID { get; set; }
         public string RouteTemplate { get; set; }
@@ -57,9 +62,10 @@ namespace DerDataModel
         public int IsAble { get; set; }
         public int OrderX { get; set; }
     }
-
+    [Table("DBSIParams")]
     public class DBSIParams : IParamData
     {
+        [Key]
         public string Id { get; set; }
         public string DId { get; set; }
         public string PKey { get; set; }
@@ -92,9 +98,10 @@ namespace DerDataModel
         #endregion
 
     }
-
+    [Table("DBSOParams")]
     public class DBSOParams : IParamData
     {
+        [Key]
         public string Id { get; set; }
         public string DId { get; set; }
         public string PKey { get; set; }

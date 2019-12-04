@@ -35,10 +35,11 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.buttonGetAllList = new System.Windows.Forms.Button();
             this.buttonDeleteOPara = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.buttonPackageDBService = new System.Windows.Forms.Button();
+            this.buttonServiceCatalog = new System.Windows.Forms.Button();
+            this.buttonServicePublish = new System.Windows.Forms.Button();
+            this.buttonServicePrivi = new System.Windows.Forms.Button();
+            this.buttonDerdataCheck = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -109,52 +110,66 @@
             this.buttonDeleteOPara.UseVisualStyleBackColor = true;
             this.buttonDeleteOPara.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
-            // button1
+            // buttonPackageDBService
             // 
-            this.button1.Location = new System.Drawing.Point(36, 51);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(114, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "封装数据服务";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonPackageDBService.Location = new System.Drawing.Point(36, 51);
+            this.buttonPackageDBService.Name = "buttonPackageDBService";
+            this.buttonPackageDBService.Size = new System.Drawing.Size(114, 23);
+            this.buttonPackageDBService.TabIndex = 7;
+            this.buttonPackageDBService.Text = "封装数据服务";
+            this.buttonPackageDBService.UseVisualStyleBackColor = true;
+            this.buttonPackageDBService.Click += new System.EventHandler(this.buttonPackageDBService_Click);
             // 
-            // button2
+            // buttonServiceCatalog
             // 
-            this.button2.Location = new System.Drawing.Point(239, 51);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "自动编目";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonServiceCatalog.Location = new System.Drawing.Point(239, 51);
+            this.buttonServiceCatalog.Name = "buttonServiceCatalog";
+            this.buttonServiceCatalog.Size = new System.Drawing.Size(75, 23);
+            this.buttonServiceCatalog.TabIndex = 8;
+            this.buttonServiceCatalog.Text = "自动编目";
+            this.buttonServiceCatalog.UseVisualStyleBackColor = true;
+            this.buttonServiceCatalog.Click += new System.EventHandler(this.buttonServiceCatalog_Click);
             // 
-            // button3
+            // buttonServicePublish
             // 
-            this.button3.Location = new System.Drawing.Point(415, 51);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "自动发布";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.buttonServicePublish.Location = new System.Drawing.Point(415, 51);
+            this.buttonServicePublish.Name = "buttonServicePublish";
+            this.buttonServicePublish.Size = new System.Drawing.Size(75, 23);
+            this.buttonServicePublish.TabIndex = 9;
+            this.buttonServicePublish.Text = "自动发布";
+            this.buttonServicePublish.UseVisualStyleBackColor = true;
+            this.buttonServicePublish.Click += new System.EventHandler(this.buttonServicePublish_Click);
             // 
-            // button4
+            // buttonServicePrivi
             // 
-            this.button4.Location = new System.Drawing.Point(603, 51);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 10;
-            this.button4.Text = "自动授权";
-            this.button4.UseVisualStyleBackColor = true;
+            this.buttonServicePrivi.Location = new System.Drawing.Point(603, 51);
+            this.buttonServicePrivi.Name = "buttonServicePrivi";
+            this.buttonServicePrivi.Size = new System.Drawing.Size(75, 23);
+            this.buttonServicePrivi.TabIndex = 10;
+            this.buttonServicePrivi.Text = "自动授权";
+            this.buttonServicePrivi.UseVisualStyleBackColor = true;
+            this.buttonServicePrivi.Click += new System.EventHandler(this.buttonServicePrivi_Click);
+            // 
+            // buttonDerdataCheck
+            // 
+            this.buttonDerdataCheck.Location = new System.Drawing.Point(731, 11);
+            this.buttonDerdataCheck.Name = "buttonDerdataCheck";
+            this.buttonDerdataCheck.Size = new System.Drawing.Size(75, 23);
+            this.buttonDerdataCheck.TabIndex = 11;
+            this.buttonDerdataCheck.Text = "衍生品测试";
+            this.buttonDerdataCheck.UseVisualStyleBackColor = true;
+            this.buttonDerdataCheck.Click += new System.EventHandler(this.buttonDerdataCheck_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 440);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonDerdataCheck);
+            this.Controls.Add(this.buttonServicePrivi);
+            this.Controls.Add(this.buttonServicePublish);
+            this.Controls.Add(this.buttonServiceCatalog);
+            this.Controls.Add(this.buttonPackageDBService);
             this.Controls.Add(this.buttonDeleteOPara);
             this.Controls.Add(this.buttonGetAllList);
             this.Controls.Add(this.checkBox1);
@@ -178,10 +193,11 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button buttonGetAllList;
         private System.Windows.Forms.Button buttonDeleteOPara;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonPackageDBService;
+        private System.Windows.Forms.Button buttonServiceCatalog;
+        private System.Windows.Forms.Button buttonServicePublish;
+        private System.Windows.Forms.Button buttonServicePrivi;
+        private System.Windows.Forms.Button buttonDerdataCheck;
     }
 }
 
