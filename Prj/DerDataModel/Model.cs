@@ -237,6 +237,97 @@ namespace DerDataModel
         #endregion
     }
 
+    [Table("ServiceCatalog")]
+    public class ServiceCatalog 
+    {
+        #region 获取/设置 字段值
+        /// <summary>
+        /// Id
+        /// </summary>	
+        [Key]
+        public string Id { get; set; }
+        /// <summary>
+        /// ServiceId
+        /// </summary>		
+        public string ServiceId { get; set; }
+        /// <summary>
+        /// ServiceType
+        /// </summary>		
+        public string ServiceType { get; set; }
+        /// <summary>
+        /// ClassifyId
+        /// </summary>		
+        public string ClassifyId { get; set; }
+        /// <summary>
+        /// CatalogId
+        /// </summary>		
+        public string CatalogId { get; set; }
+        /// <summary>
+        /// BZ
+        /// </summary>		
+        public string BZ { get; set; }
+      
+        #endregion
+       
+    }
+
+    [Table("ServiceReleaseInfo")]
+    public class ServiceReleaseInfo 
+    {
+        #region 获取/设置 字段值
+        /// <summary>
+        /// Id
+        /// </summary>	
+        [Key]
+        public string Id { get; set; }
+        /// <summary>
+        /// ServiceType
+        /// </summary>		
+        public string ServiceType { get; set; }
+        /// <summary>
+        /// SourceId
+        /// </summary>		
+        public string SourceId { get; set; }
+        /// <summary>
+        /// ReleaseTime
+        /// </summary>		
+        public DateTime? ReleaseTime { get; set; }
+        /// <summary>
+        /// RunState
+        /// </summary>		
+        public int? RunState { get; set; }
+        /// <summary>
+        /// ReleaseState
+        /// </summary>		
+        public int? ReleaseState { get; set; }
+        /// <summary>
+        /// IsPublic
+        /// </summary>		
+        public int? IsPublic { get; set; }
+        /// <summary>
+        /// IsAvailable
+        /// </summary>		
+        public int? IsAble { get; set; }
+        /// <summary>
+        /// BZ
+        /// </summary>		
+        public string BZ { get; set; }
+       
+        public int? OrderX { get; set; }
+        /// <summary>
+        /// UID
+        /// </summary>		
+        public string UID { get; set; }
+        /// <summary>
+        /// 是否需要更新
+        /// </summary>
+        public int? IsUpdate { get; set; }
+        #endregion
+
+       
+    }
+
+
     /// <summary>
     /// 数据类型-枚举
     /// </summary>

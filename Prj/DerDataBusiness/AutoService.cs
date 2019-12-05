@@ -20,6 +20,13 @@ namespace DerDataBusiness
         public static string DbsPublishUrl = ConfigurationManager.AppSettings["DbsPublishUrl"];
         public static string conn = ConfigurationManager.AppSettings["scmdb"];
         public static string UIDReplaceCharacter = ConfigurationManager.AppSettings["UIDReplaceCharacter"];
+        public static string OwnerCodeDefault = ConfigurationManager.AppSettings["OwnerCodeDefault"];
+        public static string OwnerNameDefault = ConfigurationManager.AppSettings["OwnerNameDefault"];
+        public static string VindicatorCodeDefault = ConfigurationManager.AppSettings["VindicatorCodeDefault"];
+        public static string VindicatorNameDefault = ConfigurationManager.AppSettings["VindicatorNameDefault"];
+        public static string ClassifyIdDefault = ConfigurationManager.AppSettings["ClassifyIdDefault"];
+        public static string CatalogIdDefault = ConfigurationManager.AppSettings["CatalogIdDefault"];
+        public static string DBSPublishUrl = ConfigurationManager.AppSettings["DBSPublishUrl"];
 
 
         /// <summary>
@@ -121,7 +128,30 @@ namespace DerDataBusiness
                         IsAble = 1
                     };
 
-                    connDB.Insert(dbsinfo);
+                    var resultInsertDBSInfoData=connDB.Insert(dbsinfo);
+
+                    var propertyInfo = new PropertyInfo()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UID = dbsinfo.Id,
+                        TbName = "DBSInfo",
+                        Name = derDatainfo.Des,
+                        OwnerCode = OwnerCodeDefault,
+                        OwnerName = OwnerNameDefault,
+                        VindicatorCode = "",
+                        VindicatorName = "",
+                        Des = derDatainfo.Des,
+                        IsAble = 1
+                    };
+
+                    var resultInsertPropertyInfo= connDB.Insert(propertyInfo);
+
+
+                    if (resultInsertDBSInfoData <= 0 || resultInsertPropertyInfo <= 0)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
 
                     string sqlExcuteIPara = String.Format("  INSERT INTO DBSIParams SELECT NEWID() AS [ID] ," +
                         "'{0}' AS [DId] " +
@@ -167,7 +197,7 @@ namespace DerDataBusiness
                     else
                     {
                         transaction.Rollback();
-                    }
+                    }                    
                        
                 }
                 catch(Exception ex)
@@ -178,30 +208,81 @@ namespace DerDataBusiness
                 {
                     connDB.Close();
                 }
-                
-
+               
 
             }
 
             return false;
         }
 
-        private bool  SyncDerDataToDB(string derdataid,string dbsid)
-        {
-
-            return false;
-        }
-
-
-
+        /// <summary>
+        /// 数据服务自动编目
+        /// </summary>
+        /// <param name="dbsid"></param>
+        /// <returns></returns>
         public bool ServiceAutoCatalog(string dbsid)
         {
-            throw new NotImplementedException();
+            var serviceCatalog = new ServiceCatalog()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ServiceId = dbsid,
+                ServiceType = "DBSInfo",
+                ClassifyId = ClassifyIdDefault,
+                CatalogId = CatalogIdDefault
+            };
+
+            using (SqlConnection connDB = new SqlConnection(conn))
+            {
+                try
+                {
+                    connDB.Open();
+                    var result=connDB.Insert(serviceCatalog);
+                    if (result > 0) return true;
+                }
+                catch(Exception ex)
+                {
+                    return false;
+                }
+                finally
+                {
+                    connDB.Close();
+                }
+            }
+
+            return false;
+               
         }
 
-        public bool ServiceAutoPrivi(string uid)
+        public bool ServiceAutoPrivi(string uid,string sourceId, string serviceType)
         {
-            throw new NotImplementedException();
+            using (HttpClient cli = new HttpClient())
+            {
+                var url = String.Format(DBSPublishUrl, uid);
+                var resultPublishService = cli.PostAsync(url, null).Result.Content.ReadAsStringAsync().Result;
+                if (!resultPublishService.Contains("200")) return false;              
+
+            }
+
+            using(SqlConnection connDB = new SqlConnection(conn))
+            {
+                var serviceReleaseInfo = new ServiceReleaseInfo()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ServiceType = serviceType,
+                    SourceId = sourceId,
+                    ReleaseTime = DateTime.Now,
+                    RunState = 1,
+                    ReleaseState = 1,
+                    IsPublic = 1,
+                    IsAble = 1
+                };
+
+                connDB.Open();
+                
+
+            }
+
+                throw new NotImplementedException();
         }
 
         public bool ServiceAutoPublish(string dbsid, string uid)
