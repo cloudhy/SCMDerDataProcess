@@ -40,6 +40,7 @@
             this.buttonServicePublish = new System.Windows.Forms.Button();
             this.buttonServicePrivi = new System.Windows.Forms.Button();
             this.buttonDerdataCheck = new System.Windows.Forms.Button();
+            this.buttonGetDBSInfo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -112,7 +113,7 @@
             // 
             // buttonPackageDBService
             // 
-            this.buttonPackageDBService.Location = new System.Drawing.Point(36, 51);
+            this.buttonPackageDBService.Location = new System.Drawing.Point(239, 51);
             this.buttonPackageDBService.Name = "buttonPackageDBService";
             this.buttonPackageDBService.Size = new System.Drawing.Size(114, 23);
             this.buttonPackageDBService.TabIndex = 7;
@@ -122,7 +123,7 @@
             // 
             // buttonServiceCatalog
             // 
-            this.buttonServiceCatalog.Location = new System.Drawing.Point(239, 51);
+            this.buttonServiceCatalog.Location = new System.Drawing.Point(415, 51);
             this.buttonServiceCatalog.Name = "buttonServiceCatalog";
             this.buttonServiceCatalog.Size = new System.Drawing.Size(75, 23);
             this.buttonServiceCatalog.TabIndex = 8;
@@ -132,7 +133,7 @@
             // 
             // buttonServicePublish
             // 
-            this.buttonServicePublish.Location = new System.Drawing.Point(415, 51);
+            this.buttonServicePublish.Location = new System.Drawing.Point(603, 51);
             this.buttonServicePublish.Name = "buttonServicePublish";
             this.buttonServicePublish.Size = new System.Drawing.Size(75, 23);
             this.buttonServicePublish.TabIndex = 9;
@@ -142,7 +143,7 @@
             // 
             // buttonServicePrivi
             // 
-            this.buttonServicePrivi.Location = new System.Drawing.Point(603, 51);
+            this.buttonServicePrivi.Location = new System.Drawing.Point(731, 51);
             this.buttonServicePrivi.Name = "buttonServicePrivi";
             this.buttonServicePrivi.Size = new System.Drawing.Size(75, 23);
             this.buttonServicePrivi.TabIndex = 10;
@@ -160,11 +161,22 @@
             this.buttonDerdataCheck.UseVisualStyleBackColor = true;
             this.buttonDerdataCheck.Click += new System.EventHandler(this.buttonDerdataCheck_Click);
             // 
+            // buttonGetDBSInfo
+            // 
+            this.buttonGetDBSInfo.Location = new System.Drawing.Point(36, 50);
+            this.buttonGetDBSInfo.Name = "buttonGetDBSInfo";
+            this.buttonGetDBSInfo.Size = new System.Drawing.Size(135, 23);
+            this.buttonGetDBSInfo.TabIndex = 12;
+            this.buttonGetDBSInfo.Text = "获取未编目数据服务";
+            this.buttonGetDBSInfo.UseVisualStyleBackColor = true;
+            this.buttonGetDBSInfo.Click += new System.EventHandler(this.buttonGetDBSInfo_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 440);
+            this.Controls.Add(this.buttonGetDBSInfo);
             this.Controls.Add(this.buttonDerdataCheck);
             this.Controls.Add(this.buttonServicePrivi);
             this.Controls.Add(this.buttonServicePublish);
@@ -198,6 +210,7 @@
         private System.Windows.Forms.Button buttonServicePublish;
         private System.Windows.Forms.Button buttonServicePrivi;
         private System.Windows.Forms.Button buttonDerdataCheck;
+        private System.Windows.Forms.Button buttonGetDBSInfo;
     }
 }
 

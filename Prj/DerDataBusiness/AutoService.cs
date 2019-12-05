@@ -28,6 +28,9 @@ namespace DerDataBusiness
         public static string CatalogIdDefault = ConfigurationManager.AppSettings["CatalogIdDefault"];
         public static string DBSPublishUrl = ConfigurationManager.AppSettings["DBSPublishUrl"];
 
+        public static string DBSId;
+        public static string UId;
+
 
         /// <summary>
         /// 单个衍生品测试
@@ -102,17 +105,17 @@ namespace DerDataBusiness
                 var transaction = connDB.BeginTransaction();
                 try
                 {
-                    connDB.Open();                    
-                    
+                    connDB.Open();
+
                     string queryDerDataSql = String.Format("SELECT DBId,Name,AccessType,AccessKey,Des FROM DerDataInfo WHERE Id={0}", derdataid);
 
                     var derDatainfo = connDB.Query<DerDataInfo>(queryDerDataSql).FirstOrDefault();
 
                     string accessKey = derDatainfo.AccessKey;
                     var replaceCharacters = UIDReplaceCharacter.Split(',');
-                    foreach(var item in replaceCharacters)
+                    foreach (var item in replaceCharacters)
                     {
-                        accessKey = accessKey.Replace(item,"");
+                        accessKey = accessKey.Replace(item, "");
                     }
 
                     DBSInfo dbsinfo = new DBSInfo()
@@ -128,7 +131,10 @@ namespace DerDataBusiness
                         IsAble = 1
                     };
 
-                    var resultInsertDBSInfoData=connDB.Insert(dbsinfo);
+                    DBSId = dbsinfo.Id;
+                    UId = dbsinfo.UID;
+
+                    var resultInsertDBSInfoData = connDB.Insert(dbsinfo);
 
                     var propertyInfo = new PropertyInfo()
                     {
@@ -144,7 +150,7 @@ namespace DerDataBusiness
                         IsAble = 1
                     };
 
-                    var resultInsertPropertyInfo= connDB.Insert(propertyInfo);
+                    var resultInsertPropertyInfo = connDB.Insert(propertyInfo);
 
 
                     if (resultInsertDBSInfoData <= 0 || resultInsertPropertyInfo <= 0)
@@ -197,10 +203,10 @@ namespace DerDataBusiness
                     else
                     {
                         transaction.Rollback();
-                    }                    
-                       
+                    }
+
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                 }
@@ -208,7 +214,7 @@ namespace DerDataBusiness
                 {
                     connDB.Close();
                 }
-               
+
 
             }
 
@@ -216,17 +222,50 @@ namespace DerDataBusiness
         }
 
         /// <summary>
+        /// 获取数据服务信息
+        /// </summary>
+        /// <returns></returns>
+        public List<DBSInfo> GetDBSInfo()
+        {
+            using (SqlConnection connDB=new SqlConnection(conn))
+            {
+                try
+                {
+                    connDB.Open();
+                    var dbs = connDB.Query<DBSInfo>("SELECT * FROM DBSINFO " +
+                        " WHERE ID NOT IN " +
+                        " (SELECT SERVICEID FROM ServiceCatalog) " +
+                        " AND ISABLE = 1 "+
+                        " ORDER BY ORDERX DESC").ToList();
+
+                    return dbs;
+                }
+                catch
+                {
+                    return null;
+                }
+                finally
+                {
+                    connDB.Close();
+                }
+
+                
+            }
+        }
+
+
+        /// <summary>
         /// 数据服务自动编目
         /// </summary>
         /// <param name="dbsid"></param>
         /// <returns></returns>
-        public bool ServiceAutoCatalog(string dbsid)
+        public bool ServiceAutoCatalog(string dbsid,string serviceType="DBSInfo")
         {
             var serviceCatalog = new ServiceCatalog()
             {
                 Id = Guid.NewGuid().ToString(),
                 ServiceId = dbsid,
-                ServiceType = "DBSInfo",
+                ServiceType = serviceType,
                 ClassifyId = ClassifyIdDefault,
                 CatalogId = CatalogIdDefault
             };
@@ -236,10 +275,10 @@ namespace DerDataBusiness
                 try
                 {
                     connDB.Open();
-                    var result=connDB.Insert(serviceCatalog);
+                    var result = connDB.Insert(serviceCatalog);
                     if (result > 0) return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return false;
                 }
@@ -250,20 +289,32 @@ namespace DerDataBusiness
             }
 
             return false;
-               
+
         }
 
-        public bool ServiceAutoPrivi(string uid,string sourceId, string serviceType)
+        public bool ServiceAutoPrivi(string uid, string sourceId, string serviceType)
         {
             using (HttpClient cli = new HttpClient())
             {
-                var url = String.Format(DBSPublishUrl, uid);
-                var resultPublishService = cli.PostAsync(url, null).Result.Content.ReadAsStringAsync().Result;
-                if (!resultPublishService.Contains("200")) return false;              
+                try
+                {
+                    var url = String.Format(DBSPublishUrl, uid);
+                    var resultPublishService = cli.PostAsync(url, null).Result.Content.ReadAsStringAsync().Result;
+                    if (!resultPublishService.Contains("200")) return false;
+
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+                finally
+                {
+
+                }
 
             }
 
-            using(SqlConnection connDB = new SqlConnection(conn))
+            using (SqlConnection connDB = new SqlConnection(conn))
             {
                 var serviceReleaseInfo = new ServiceReleaseInfo()
                 {
@@ -276,13 +327,23 @@ namespace DerDataBusiness
                     IsPublic = 1,
                     IsAble = 1
                 };
-
-                connDB.Open();
-                
+                try
+                {
+                    connDB.Open();
+                    connDB.Insert(serviceReleaseInfo);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+                finally
+                {
+                    connDB.Close();
+                }
 
             }
 
-                throw new NotImplementedException();
         }
 
         public bool ServiceAutoPublish(string dbsid, string uid)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DerDataModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,14 @@ namespace DerDataBusiness
         /// </summary>
         /// <param name="derdataid"></param>
         /// <returns></returns>
-        bool DerDataCheck(string derdataid);
+        bool  DerDataCheck(string derdataid);
+        /// <summary>
+        /// 更新测试结果信息
+        /// </summary>
+        /// <param name="derdataid"></param>
+        /// <param name="testresult"></param>
+        /// <returns></returns>
+        bool UpdateDerDataStatus(string derdataid, bool testresult);
         /// <summary>
         /// 衍生品封装为数据服务
         /// </summary>
@@ -21,24 +29,30 @@ namespace DerDataBusiness
         /// <returns></returns>
         bool DerDataToDBService(string derdataid);
         /// <summary>
+        /// 获取数据服务
+        /// </summary>
+        /// <returns></returns>
+        List<DBSInfo> GetDBSInfo();
+        /// <summary>
         /// 衍生品自动编目
         /// </summary>
         /// <param name="dbsid"></param>
         /// <returns></returns>
-        bool ServiceAutoCatalog(string dbsid);
+        bool ServiceAutoCatalog(string dbsid, string serviceType="DBSInfo");
+       
         /// <summary>
-        /// 衍生品自动发布
+        /// 服务自动发布
         /// </summary>
         /// <param name="dbsid"></param>
         /// <param name="uid"></param>
         /// <returns></returns>
         bool ServiceAutoPublish(string dbsid,string uid);
         /// <summary>
-        /// 衍生品自动授权
+        /// 服务自动授权
         /// </summary>
         /// <param name="uid"></param>
         /// <returns></returns>
-        bool ServiceAutoPrivi(string uid);
+        bool ServiceAutoPrivi(string uid, string sourceId, string serviceType);
 
     }
 }
