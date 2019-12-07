@@ -153,6 +153,9 @@ namespace DerDataFront
         {
            // autoService = new
             int count = dataGridView1.Rows.Count;
+            int errorCount = 0;
+            string errorName = "";
+            int chooseCount = 0;
             try
             {
                 for (int i = 0; i < count; i++)
@@ -162,24 +165,31 @@ namespace DerDataFront
                     Boolean flag = Convert.ToBoolean(checkCell.Value);
                     if (flag == true)
                     {
+                        chooseCount++;
                         ///赋值
                         Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
-                        Name= this.dataGridView1.Rows[i].Cells[3].Value.ToString();
-                        bool derdataCheckResult=autoService.DerDataCheck(Id);
+                        Name = this.dataGridView1.Rows[i].Cells[3].Value.ToString();
+                        bool derdataCheckResult = autoService.DerDataCheck(Id);
                         autoService.UpdateDerDataStatus(Id, derdataCheckResult);
-                        if(derdataCheckResult==false)
+                        if (derdataCheckResult == false)
                         {
-                            MessageBox.Show("衍生品 {0} 测试失败", Name);                           
+                            MessageBox.Show("衍生品" + Name + "测试失败");
+                            errorCount++;
+                            errorName += Name;
+
                         }
 
                     }
 
                 }
+                
             }
             catch
             {
 
             }
+
+            MessageBox.Show("衍生品测试成功，总个数" + chooseCount.ToString() + " 失败个数" + errorCount.ToString() + " 失败名称" + errorName);
           }
 
 
@@ -188,10 +198,12 @@ namespace DerDataFront
             int count = dataGridView1.Rows.Count;
             int errorCount = 0;
             string errorName = "";
+            int chooseCount = 0;
             try
             {
                 for (int i = 0; i < count; i++)
                 {
+                    chooseCount++;
                     string Id, KeyWords;
                     DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dataGridView1.Rows[i].Cells[0];
                     Boolean flag = Convert.ToBoolean(checkCell.Value);
@@ -200,26 +212,28 @@ namespace DerDataFront
                         ///赋值
                         Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
                         KeyWords= this.dataGridView1.Rows[i].Cells[6].Value.ToString();
-                        bool serviceCatalogResult = autoService.ServiceAutoCatalog(Id);
+                        bool serviceCatalogResult = autoService.DerDataToDBService(Id);
                         if (serviceCatalogResult == false)
                         {
                             errorCount++;
-                            errorName += " " + KeyWords;
-                            MessageBox.Show("服务{0}编目失败", KeyWords);
+                            errorName += " " + KeyWords;                
+                            MessageBox.Show(String.Format("服务{0}编目失败", KeyWords));
                         }                       
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
 
             }
             finally
             {
-                MessageBox.Show("数据服务编目,失败个数：{0}", 
-                    errorCount.ToString());
-                MessageBox.Show(" 数据服务名称：{0}",
-                    errorName);
+                MessageBox.Show(String.Format("封装数据服务,总个数：{0}",
+                   chooseCount));
+                MessageBox.Show(String.Format("封装数据服务编目,失败个数：{0}", 
+                    errorCount.ToString()));
+                MessageBox.Show(String.Format(" 封装数据服务名称：{0}",
+                    errorName));
             }
         }
 
@@ -248,12 +262,14 @@ namespace DerDataFront
                         ///赋值
                         Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
                         Name = this.dataGridView1.Rows[i].Cells[3].Value.ToString();
-                        bool derdataToDBService = autoService.DerDataToDBService(Id);
-                        if (derdataToDBService == false)
+                        bool serviceCatalogResult = autoService.ServiceAutoCatalog(Id);
+
+                        
+                        if (serviceCatalogResult == false)
                         {
                             errorCount++;
                             errorName += " " + Name;
-                            MessageBox.Show("衍生品{0}封装为数据服务失败", Name);
+                            MessageBox.Show("服务{0}编目失败", Name);
                         }
                     }
                 }
@@ -264,7 +280,7 @@ namespace DerDataFront
             }
             finally
             {
-                MessageBox.Show("封装数据服务完成数据服务完成,失败个数：{0}",
+                MessageBox.Show("服务编目完成,失败个数：{0}",
                     errorCount.ToString());
                 MessageBox.Show(" 失败衍生品名称：{0}",
                     errorName);
@@ -275,6 +291,44 @@ namespace DerDataFront
 
         private void buttonServicePublish_Click(object sender, EventArgs e)
         {
+            int count = dataGridView1.Rows.Count;
+            int errorCount = 0;
+            string errorName = "";
+            try
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    string Id, UId;
+                    DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dataGridView1.Rows[i].Cells[0];
+                    Boolean flag = Convert.ToBoolean(checkCell.Value);
+                    if (flag == true)
+                    {
+                        ///赋值
+                        Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
+                        UId = this.dataGridView1.Rows[i].Cells[2].Value.ToString();
+                        bool servicePublishResult = autoService.ServiceAutoPublish(Id, UId);
+
+
+                        if (servicePublishResult == false)
+                        {
+                            errorCount++;
+                            errorName += " " + Name;
+                            MessageBox.Show("服务{0}编目失败", Name);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                MessageBox.Show("服务编目完成,失败个数：{0}",
+                    errorCount.ToString());
+                MessageBox.Show(" 失败衍生品名称：{0}",
+                    errorName);
+            }
 
         }
 
@@ -283,6 +337,12 @@ namespace DerDataFront
 
         }
 
-       
+        private void buttonGetUnPublishService_Click(object sender, EventArgs e)
+        {
+            var dbsList = autoService.GetUnPublishService();
+
+            dataGridView1.DataSource = dbsList;
+            dataGridView1.Show();
+        }
     }
 }

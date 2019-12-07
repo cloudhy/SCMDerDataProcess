@@ -17,7 +17,6 @@ namespace DerDataBusiness
     public class AutoService : IAutoService
     {
         public static string DerDataCheckUrl = ConfigurationManager.AppSettings["DerDataCheckUrl"];
-        public static string DbsPublishUrl = ConfigurationManager.AppSettings["DbsPublishUrl"];
         public static string conn = ConfigurationManager.AppSettings["scmdb"];
         public static string UIDReplaceCharacter = ConfigurationManager.AppSettings["UIDReplaceCharacter"];
         public static string OwnerCodeDefault = ConfigurationManager.AppSettings["OwnerCodeDefault"];
@@ -72,7 +71,7 @@ namespace DerDataBusiness
                 {
                     connDB.Open();
                     string testResult = testresult == true ? "1" : "2";
-                    string sql = String.Format("UPDATE DerDataInfo SET isTest={0} where id={1}", testResult, derdataid);
+                    string sql = String.Format("UPDATE DerDataInfo SET isTest={0} where id='{1}'", testResult, derdataid);
                     int result = connDB.Execute(sql);
                     if (result > 0) return true;
 
@@ -102,14 +101,15 @@ namespace DerDataBusiness
         {
             using (SqlConnection connDB = new SqlConnection(conn))
             {
-                var transaction = connDB.BeginTransaction();
+                SqlTransaction transaction=null;
                 try
                 {
                     connDB.Open();
+                    transaction = connDB.BeginTransaction();
 
-                    string queryDerDataSql = String.Format("SELECT DBId,Name,AccessType,AccessKey,Des FROM DerDataInfo WHERE Id={0}", derdataid);
+                    string queryDerDataSql = String.Format("SELECT DBId,Name,AccessType,AccessKey,Des FROM DerDataInfo WHERE Id='{0}'", derdataid);
 
-                    var derDatainfo = connDB.Query<DerDataInfo>(queryDerDataSql).FirstOrDefault();
+                    var derDatainfo = connDB.Query<DerDataInfo>(queryDerDataSql,null, transaction).FirstOrDefault();
 
                     string accessKey = derDatainfo.AccessKey;
                     var replaceCharacters = UIDReplaceCharacter.Split(',');
@@ -122,19 +122,21 @@ namespace DerDataBusiness
                     {
                         Id = Guid.NewGuid().ToString(),
                         UID = accessKey,
+                        RouteTemplate=null,
                         Method = "Get,Post",
                         SourceType = derDatainfo.AccessType,
                         SourceID = derdataid,
                         KeyWords = derDatainfo.Des,
                         Abstract = derDatainfo.Des,
                         Des = derDatainfo.Des,
-                        IsAble = 1
+                        IsAble = 1,
+                        IsUpdate=1
                     };
 
                     DBSId = dbsinfo.Id;
                     UId = dbsinfo.UID;
 
-                    var resultInsertDBSInfoData = connDB.Insert(dbsinfo);
+                    var resultInsertDBSInfoData = connDB.Insert(dbsinfo, transaction);
 
                     var propertyInfo = new PropertyInfo()
                     {
@@ -150,7 +152,7 @@ namespace DerDataBusiness
                         IsAble = 1
                     };
 
-                    var resultInsertPropertyInfo = connDB.Insert(propertyInfo);
+                    var resultInsertPropertyInfo = connDB.Insert(propertyInfo, transaction);
 
 
                     if (resultInsertDBSInfoData <= 0 || resultInsertPropertyInfo <= 0)
@@ -192,8 +194,8 @@ namespace DerDataBusiness
                         derdataid
                         );
 
-                    int resultIPara = connDB.Execute(sqlExcuteIPara);
-                    int resultOPara = connDB.Execute(sqlExcuteIPara);
+                    int resultIPara = connDB.Execute(sqlExcuteIPara,null, transaction);
+                    int resultOPara = connDB.Execute(sqlExcuteIPara, null, transaction);
 
                     if (resultIPara >= 0 && resultOPara >= 0)
                     {
@@ -292,6 +294,7 @@ namespace DerDataBusiness
 
         }
 
+
         public bool ServiceAutoPrivi(string uid, string sourceId, string serviceType)
         {
             using (HttpClient cli = new HttpClient())
@@ -346,9 +349,87 @@ namespace DerDataBusiness
 
         }
 
-        public bool ServiceAutoPublish(string dbsid, string uid)
+        public bool ServiceAutoPublish(string dbsid, string uid, string serviceType="DBSInfo")
         {
-            throw new NotImplementedException();
+            using (HttpClient cli = new HttpClient())
+            {
+                try
+                {
+                    var url = String.Format(DBSPublishUrl, uid);
+                    var resultPublishService = cli.PostAsync(url, null).Result.Content.ReadAsStringAsync().Result;
+                    if (!resultPublishService.Contains("200")) return false;
+
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+                finally
+                {
+
+                }
+
+            }
+
+            using (SqlConnection connDB = new SqlConnection(conn))
+            {
+                var serviceReleaseInfo = new ServiceReleaseInfo()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ServiceType = serviceType,
+                    SourceId = dbsid,
+                    ReleaseTime = DateTime.Now,
+                    RunState = 1,
+                    ReleaseState = 1,
+                    IsPublic = 1,
+                    IsAble = 1
+                };
+                try
+                {
+                    connDB.Open();
+                    connDB.Insert(serviceReleaseInfo);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+                finally
+                {
+                    connDB.Close();
+                }
+
+            }
         }
+
+
+        public List<DBSInfo> GetUnPublishService()
+        {
+            using (SqlConnection connDB = new SqlConnection(conn))
+            {
+                try
+                {
+                    connDB.Open();
+                    var dbs = connDB.Query<DBSInfo>("SELECT * FROM DBSINFO " +
+                        " WHERE ID NOT IN " +
+                        " (SELECT SERVICEID FROM ServiceReleaseInfo) " +
+                        " AND ISABLE = 1 " +
+                        " ORDER BY ORDERX DESC").ToList();
+
+                    return dbs;
+                }
+                catch
+                {
+                    return null;
+                }
+                finally
+                {
+                    connDB.Close();
+                }
+
+
+            }
+        }
+
     }
 }

@@ -39,14 +39,16 @@ namespace DerDataBusiness
         /// <param name="dbsid"></param>
         /// <returns></returns>
         bool ServiceAutoCatalog(string dbsid, string serviceType="DBSInfo");
-       
+
+
+        List<DBSInfo> GetUnPublishService();
         /// <summary>
         /// 服务自动发布
         /// </summary>
         /// <param name="dbsid"></param>
         /// <param name="uid"></param>
         /// <returns></returns>
-        bool ServiceAutoPublish(string dbsid,string uid);
+        bool ServiceAutoPublish(string dbsid,string uid, string serviceType = "DBSInfo");
         /// <summary>
         /// 服务自动授权
         /// </summary>

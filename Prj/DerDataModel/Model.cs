@@ -60,7 +60,9 @@ namespace DerDataModel
         public string Abstract { get; set; }
         public string Des { get; set; }
         public int IsAble { get; set; }
+        [Dapper.ReadOnly(true)]
         public int OrderX { get; set; }
+        public int IsUpdate { get; set; }
     }
     [Table("DBSIParams")]
     public class DBSIParams : IParamData

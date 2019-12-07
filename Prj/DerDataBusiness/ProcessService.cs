@@ -36,11 +36,13 @@ namespace DerDataBusiness
                 string sql = null;
                 if(flag==1)
                 {
-                     sql = "select * from DerDataInfo where IsAble != 2 and (Select count(1) from DerDataOParams where DId = DerDataInfo.Id) = 0";
+                     sql = "select * from DerDataInfo where IsAble != 2 and (Select count(1) from DerDataOParams where DId = DerDataInfo.Id) = 0" +
+                        "Order BY OrderX DESC";
                 }
                 else
                 {
-                    sql = "select * from DerDataInfo where IsAble != 2 ";
+                    sql = "select * from DerDataInfo where IsAble != 2 " +
+                        "Order BY OrderX DESC";
                 }
 
 

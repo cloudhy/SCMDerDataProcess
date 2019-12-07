@@ -41,6 +41,7 @@
             this.buttonServicePrivi = new System.Windows.Forms.Button();
             this.buttonDerdataCheck = new System.Windows.Forms.Button();
             this.buttonGetDBSInfo = new System.Windows.Forms.Button();
+            this.buttonGetUnPublishService = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -113,7 +114,7 @@
             // 
             // buttonPackageDBService
             // 
-            this.buttonPackageDBService.Location = new System.Drawing.Point(239, 51);
+            this.buttonPackageDBService.Location = new System.Drawing.Point(205, 50);
             this.buttonPackageDBService.Name = "buttonPackageDBService";
             this.buttonPackageDBService.Size = new System.Drawing.Size(114, 23);
             this.buttonPackageDBService.TabIndex = 7;
@@ -123,7 +124,7 @@
             // 
             // buttonServiceCatalog
             // 
-            this.buttonServiceCatalog.Location = new System.Drawing.Point(415, 51);
+            this.buttonServiceCatalog.Location = new System.Drawing.Point(345, 50);
             this.buttonServiceCatalog.Name = "buttonServiceCatalog";
             this.buttonServiceCatalog.Size = new System.Drawing.Size(75, 23);
             this.buttonServiceCatalog.TabIndex = 8;
@@ -171,11 +172,23 @@
             this.buttonGetDBSInfo.UseVisualStyleBackColor = true;
             this.buttonGetDBSInfo.Click += new System.EventHandler(this.buttonGetDBSInfo_Click);
             // 
+            // buttonGetUnPublishService
+            // 
+            this.buttonGetUnPublishService.Location = new System.Drawing.Point(453, 50);
+            this.buttonGetUnPublishService.Name = "buttonGetUnPublishService";
+            this.buttonGetUnPublishService.Size = new System.Drawing.Size(105, 23);
+            this.buttonGetUnPublishService.TabIndex = 13;
+            this.buttonGetUnPublishService.Text = "获取未发布服务";
+            this.buttonGetUnPublishService.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonGetUnPublishService.UseVisualStyleBackColor = true;
+            this.buttonGetUnPublishService.Click += new System.EventHandler(this.buttonGetUnPublishService_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 440);
+            this.Controls.Add(this.buttonGetUnPublishService);
             this.Controls.Add(this.buttonGetDBSInfo);
             this.Controls.Add(this.buttonDerdataCheck);
             this.Controls.Add(this.buttonServicePrivi);
@@ -211,6 +224,7 @@
         private System.Windows.Forms.Button buttonServicePrivi;
         private System.Windows.Forms.Button buttonDerdataCheck;
         private System.Windows.Forms.Button buttonGetDBSInfo;
+        private System.Windows.Forms.Button buttonGetUnPublishService;
     }
 }
 
