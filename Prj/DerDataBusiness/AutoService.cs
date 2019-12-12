@@ -110,6 +110,7 @@ namespace DerDataBusiness
                     string queryDerDataSql = String.Format("SELECT DBId,Name,AccessType,AccessKey,Des FROM DerDataInfo WHERE Id='{0}'", derdataid);
 
                     var derDatainfo = connDB.Query<DerDataInfo>(queryDerDataSql,null, transaction).FirstOrDefault();
+                    //transaction.Commit();
 
                     string accessKey = derDatainfo.AccessKey;
                     var replaceCharacters = UIDReplaceCharacter.Split(',');
@@ -129,14 +130,19 @@ namespace DerDataBusiness
                         KeyWords = derDatainfo.Des,
                         Abstract = derDatainfo.Des,
                         Des = derDatainfo.Des,
-                        IsAble = 1,
+                        IsAble=1,
                         IsUpdate=1
                     };
 
                     DBSId = dbsinfo.Id;
                     UId = dbsinfo.UID;
 
-                    var resultInsertDBSInfoData = connDB.Insert(dbsinfo, transaction);
+
+
+                    var resultInsertDBSInfoData = connDB.Execute(@"Insert into DBSInfo(Id, UID, RouteTemplate, Method, SourceType, SourceID, KeyWords, Abstract, Des,IsAble, IsUpdate) " +
+                        "VALUES (@Id, @UID, @RouteTemplate, @Method, @SourceType, @SourceID, @KeyWords, @Abstract, @Des, @IsAble, @IsUpdate) ",
+                        dbsinfo,
+                        transaction);
 
                     var propertyInfo = new PropertyInfo()
                     {
@@ -146,13 +152,16 @@ namespace DerDataBusiness
                         Name = derDatainfo.Des,
                         OwnerCode = OwnerCodeDefault,
                         OwnerName = OwnerNameDefault,
-                        VindicatorCode = "",
-                        VindicatorName = "",
+                        VindicatorCode = VindicatorCodeDefault,
+                        VindicatorName = VindicatorNameDefault,
                         Des = derDatainfo.Des,
                         IsAble = 1
                     };
 
-                    var resultInsertPropertyInfo = connDB.Insert(propertyInfo, transaction);
+                    var resultInsertPropertyInfo = connDB.Execute(@"INSERT INTO  PropertyInfo(Id, UID, TbName, Name, OwnerCode, OwnerName, VindicatorCode, VindicatorName, Des, IsAble)"+ 
+                     " VALUES (@Id, @UID, @TbName, @Name, @OwnerCode, @OwnerName, @VindicatorCode, @VindicatorName, @Des, @IsAble)", 
+                        propertyInfo,
+                        transaction);
 
 
                     if (resultInsertDBSInfoData <= 0 || resultInsertPropertyInfo <= 0)
@@ -161,7 +170,10 @@ namespace DerDataBusiness
                         return false;
                     }
 
-                    string sqlExcuteIPara = String.Format("  INSERT INTO DBSIParams SELECT NEWID() AS [ID] ," +
+                    string sqlExcuteIPara = String.Format("  INSERT INTO " +
+                        "DBSIParams " +
+                        "([ID],[DId],[PKey],[Name],[SN],[Dtp],[IsRequired],[Local],[Des],[DefaultValue],[Unit],[BZ],[IsAble])" +
+                        "SELECT NEWID() AS [ID] ," +
                         "'{0}' AS [DId] " +
                         ",[PKey] ,[Name] ," +
                         "[SN] ," +
@@ -172,13 +184,16 @@ namespace DerDataBusiness
                         "[DefaultValue] ," +
                         "[Unit] ," +
                         "[BZ] ," +
-                        "[IsAble] FROM [DerDataIParams] WHERE Id='{1}'",
+                        "[IsAble] FROM [DerDataIParams] WHERE DId='{1}'",
                         dbsinfo.Id,
                         derdataid
                         );
 
 
-                    string sqlExcuteOPara = String.Format("  INSERT INTO DBSOParams SELECT NEWID() AS [ID] ," +
+                    string sqlExcuteOPara = String.Format("  INSERT INTO " +
+                        "DBSOParams " +
+                        "([ID],[DId],[PKey],[Name],[SN],[Dtp],[IsRequired],[Local],[Des],[DefaultValue],[Unit],[BZ],[IsAble])" +
+                        "SELECT NEWID() AS [ID] ," +
                         "'{0}' AS [DId] " +
                         ",[PKey] ,[Name] ," +
                         "[SN] ," +
@@ -189,13 +204,13 @@ namespace DerDataBusiness
                         "[DefaultValue] ," +
                         "[Unit] ," +
                         "[BZ] ," +
-                        "[IsAble] FROM [DerDataOParams] WHERE Id='{1}'",
+                        "[IsAble] FROM [DerDataOParams] WHERE DId='{1}'",
                         dbsinfo.Id,
                         derdataid
                         );
 
                     int resultIPara = connDB.Execute(sqlExcuteIPara,null, transaction);
-                    int resultOPara = connDB.Execute(sqlExcuteIPara, null, transaction);
+                    int resultOPara = connDB.Execute(sqlExcuteOPara, null, transaction);
 
                     if (resultIPara >= 0 && resultOPara >= 0)
                     {
@@ -269,7 +284,8 @@ namespace DerDataBusiness
                 ServiceId = dbsid,
                 ServiceType = serviceType,
                 ClassifyId = ClassifyIdDefault,
-                CatalogId = CatalogIdDefault
+                CatalogId = CatalogIdDefault,
+                CreateDate = DateTime.Now
             };
 
             using (SqlConnection connDB = new SqlConnection(conn))
@@ -277,7 +293,8 @@ namespace DerDataBusiness
                 try
                 {
                     connDB.Open();
-                    var result = connDB.Insert(serviceCatalog);
+                    var result = connDB.Execute(@"insert into  ServiceCatalog(Id, ServiceId, ServiceType, ClassifyId, CatalogId, BZ, CreateDate) 
+                      VALUES (@Id, @ServiceId, @ServiceType, @ClassifyId, @CatalogId, @BZ, @CreateDate)", serviceCatalog);
                     if (result > 0) return true;
                 }
                 catch (Exception ex)
@@ -387,8 +404,9 @@ namespace DerDataBusiness
                 try
                 {
                     connDB.Open();
-                    connDB.Insert(serviceReleaseInfo);
-                    return true;
+                    int count=connDB.Execute(@"insert into  serviceReleaseInfo (Id, ServiceType, SourceId, ReleaseTime, RunState, ReleaseState, IsPublic, BZ, IsAble) 
+                                VALUES  (@Id, @ServiceType, @SourceId, @ReleaseTime, @RunState, @ReleaseState, @IsPublic, @BZ, @IsAble) ",serviceReleaseInfo);
+                    if (count>0) return true;
                 }
                 catch (Exception ex)
                 {
@@ -399,6 +417,7 @@ namespace DerDataBusiness
                     connDB.Close();
                 }
 
+                return false;
             }
         }
 
@@ -412,7 +431,7 @@ namespace DerDataBusiness
                     connDB.Open();
                     var dbs = connDB.Query<DBSInfo>("SELECT * FROM DBSINFO " +
                         " WHERE ID NOT IN " +
-                        " (SELECT SERVICEID FROM ServiceReleaseInfo) " +
+                        " (SELECT ID FROM ServiceReleaseInfo) " +
                         " AND ISABLE = 1 " +
                         " ORDER BY ORDERX DESC").ToList();
 
@@ -428,6 +447,48 @@ namespace DerDataBusiness
                 }
 
 
+            }
+        }
+
+        public bool ServiceDeleteDerdataRelationInfo(string Id)
+        {
+            string Sql1 = String.Format(@"delete from DerDataOParams where did ='{0}' ", Id);
+            string Sql2 = String.Format(@"delete from DBSIParams where did in (select Id from dbsinfo where SourceID='{0}')", Id);
+            string Sql3 = String.Format(@"delete from DBSOParams where did in (select Id from dbsinfo where SourceID='{0}')", Id);
+            string Sql4 = String.Format(@"delete  from PropertyInfo where uid in  (select Id from  dbsinfo where SourceID='{0}') ", Id);
+            string Sql5 = String.Format(@"delete from DBSInfo where SourceID = '{0}' ", Id);
+            string Sql6 = String.Format(@"delete from ServiceCatalog where ServiceId ='{0}' ", Id);
+            string Sql7 = String.Format(@"delete from serviceReleaseInfo where SourceId ='{0}' ", Id);
+
+            using (SqlConnection connDB = new SqlConnection(conn))
+            {
+                try
+                {
+                    connDB.Open();
+                    int result1=connDB.Execute(Sql1);
+                    int result2 = connDB.Execute(Sql2);
+                    int result3 = connDB.Execute(Sql3);
+                    int result4 = connDB.Execute(Sql4);
+                    int result5 = connDB.Execute(Sql5);
+                    int result6 = connDB.Execute(Sql6);
+                    int result7 = connDB.Execute(Sql7);
+
+                    if(result1>0 && result2 > 0 && result3 > 0 && 
+                        result4 > 0 && result5 > 0 && result6 > 0 && result7 > 0)
+                    {
+                        return true;
+                    }
+                }
+                catch(Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connDB.Close();
+                    
+                }
+                return false;
             }
         }
 

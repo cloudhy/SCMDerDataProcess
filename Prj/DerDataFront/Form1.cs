@@ -15,7 +15,7 @@ namespace DerDataFront
 {
     public partial class Form1 : Form
     {
-        private IAutoService autoService=new AutoService();
+        private IAutoService autoService = new AutoService();
 
         public Form1()
         {
@@ -32,7 +32,7 @@ namespace DerDataFront
         {
 
             var derList = ProcessService.GetDerList();
-            
+
             dataGridView1.DataSource = derList;
             dataGridView1.Show();
 
@@ -47,7 +47,7 @@ namespace DerDataFront
 
         private void buttonAddOP_Click(object sender, EventArgs e)
         {
-           
+
             int count = dataGridView1.Rows.Count;
             try
             {
@@ -65,7 +65,7 @@ namespace DerDataFront
                         AccessKey = this.dataGridView1.Rows[i].Cells[5].Value.ToString();
                         ProcessService.AddOPara(Id, DbId, AccessKey);
 
-                    }                  
+                    }
 
                 }
 
@@ -75,11 +75,11 @@ namespace DerDataFront
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
-           
+
 
 
         }
@@ -123,13 +123,13 @@ namespace DerDataFront
                 List<string> deleteList = new List<string>();
                 for (int i = 0; i < count; i++)
                 {
-          
+
                     DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dataGridView1.Rows[i].Cells[0];
                     Boolean flag = Convert.ToBoolean(checkCell.Value);
                     if (flag == true)
                     {
                         ///将需要删除的id信息放入list中
-                        string id= this.dataGridView1.Rows[i].Cells[1].Value.ToString();
+                        string id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
                         deleteList.Add(id);
 
                     }
@@ -151,7 +151,7 @@ namespace DerDataFront
 
         private void buttonDerdataCheck_Click(object sender, EventArgs e)
         {
-           // autoService = new
+            // autoService = new
             int count = dataGridView1.Rows.Count;
             int errorCount = 0;
             string errorName = "";
@@ -182,7 +182,7 @@ namespace DerDataFront
                     }
 
                 }
-                
+
             }
             catch
             {
@@ -190,7 +190,7 @@ namespace DerDataFront
             }
 
             MessageBox.Show("衍生品测试成功，总个数" + chooseCount.ToString() + " 失败个数" + errorCount.ToString() + " 失败名称" + errorName);
-          }
+        }
 
 
         private void buttonPackageDBService_Click(object sender, EventArgs e)
@@ -203,26 +203,27 @@ namespace DerDataFront
             {
                 for (int i = 0; i < count; i++)
                 {
-                    chooseCount++;
+
                     string Id, KeyWords;
                     DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dataGridView1.Rows[i].Cells[0];
                     Boolean flag = Convert.ToBoolean(checkCell.Value);
                     if (flag == true)
                     {
+                        chooseCount++;
                         ///赋值
                         Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
-                        KeyWords= this.dataGridView1.Rows[i].Cells[6].Value.ToString();
+                        KeyWords = this.dataGridView1.Rows[i].Cells[6].Value.ToString();
                         bool serviceCatalogResult = autoService.DerDataToDBService(Id);
                         if (serviceCatalogResult == false)
                         {
                             errorCount++;
-                            errorName += " " + KeyWords;                
-                            MessageBox.Show(String.Format("服务{0}编目失败", KeyWords));
-                        }                       
+                            errorName += " " + KeyWords;
+                            MessageBox.Show(String.Format("服务{0}封装失败", KeyWords));
+                        }
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -230,7 +231,7 @@ namespace DerDataFront
             {
                 MessageBox.Show(String.Format("封装数据服务,总个数：{0}",
                    chooseCount));
-                MessageBox.Show(String.Format("封装数据服务编目,失败个数：{0}", 
+                MessageBox.Show(String.Format("封装数据服务编目,失败个数：{0}",
                     errorCount.ToString()));
                 MessageBox.Show(String.Format(" 封装数据服务名称：{0}",
                     errorName));
@@ -254,17 +255,21 @@ namespace DerDataFront
             {
                 for (int i = 0; i < count; i++)
                 {
-                    string Id, Name;
+                    string Id, Name = null;
                     DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dataGridView1.Rows[i].Cells[0];
                     Boolean flag = Convert.ToBoolean(checkCell.Value);
                     if (flag == true)
                     {
                         ///赋值
                         Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
-                        Name = this.dataGridView1.Rows[i].Cells[3].Value.ToString();
+                        if (this.dataGridView1.Rows[i].Cells[7].Value != null)
+                        {
+                            Name = this.dataGridView1.Rows[i].Cells[7].Value.ToString();
+                        }
+
                         bool serviceCatalogResult = autoService.ServiceAutoCatalog(Id);
 
-                        
+
                         if (serviceCatalogResult == false)
                         {
                             errorCount++;
@@ -274,7 +279,7 @@ namespace DerDataFront
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
 
             }
@@ -287,7 +292,7 @@ namespace DerDataFront
             }
         }
 
-        
+
 
         private void buttonServicePublish_Click(object sender, EventArgs e)
         {
@@ -343,6 +348,103 @@ namespace DerDataFront
 
             dataGridView1.DataSource = dbsList;
             dataGridView1.Show();
+        }
+
+        /// <summary>
+        /// 一键发布服务
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonOneClick_Click(object sender, EventArgs e)
+        {
+            int count = dataGridView1.Rows.Count;
+            AutoService autoTotalService = new AutoService();
+            try
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    string Id, DbId, AccessType, AccessKey;
+                    DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dataGridView1.Rows[i].Cells[0];
+                    Boolean flag = Convert.ToBoolean(checkCell.Value);
+
+                    if (flag == true)
+                    {
+                        try
+                        {
+                            ///赋值
+                            Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
+                            DbId = this.dataGridView1.Rows[i].Cells[2].Value.ToString();
+                            AccessType = this.dataGridView1.Rows[i].Cells[4].Value.ToString();
+                            AccessKey = this.dataGridView1.Rows[i].Cells[5].Value.ToString();
+                            var addParaResult = ProcessService.AddOPara(Id, DbId, AccessKey);
+                            ProcessService.conn.Close();
+                            ProcessService.ReviseAlias();
+                            if (addParaResult == true)
+                            {
+                                bool derdataCheckResult = autoTotalService.DerDataCheck(Id);
+                                if (derdataCheckResult == true)
+                                {
+                                    autoService.UpdateDerDataStatus(Id, derdataCheckResult);
+                                    bool derDataToDBServiceResult = autoTotalService.DerDataToDBService(Id);
+
+                                    if (derDataToDBServiceResult == true)
+                                    {
+                                        bool serviceCatalogResult = autoTotalService.ServiceAutoCatalog(AutoService.DBSId);
+
+                                        if (serviceCatalogResult == true)
+                                        {
+                                            bool servicePublishResult = autoService.ServiceAutoPublish(AutoService.DBSId, AutoService.UId);
+
+                                            if (servicePublishResult == true) continue;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            
+                        }                      
+                    }
+                }
+
+                MessageBox.Show("一键发布授权成功");
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+        }
+
+        private void buttonDeleteDerdataRelationInfo_Click(object sender, EventArgs e)
+        {
+            int count = dataGridView1.Rows.Count;
+            AutoService autoTotalService = new AutoService();
+            try
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    string Id;
+                    DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dataGridView1.Rows[i].Cells[0];
+                    Boolean flag = Convert.ToBoolean(checkCell.Value);
+
+                    if (flag == true)
+                    {
+                        ///赋值
+                        Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
+
+                        autoTotalService.
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }

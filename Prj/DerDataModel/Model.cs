@@ -268,9 +268,13 @@ namespace DerDataModel
         /// BZ
         /// </summary>		
         public string BZ { get; set; }
-      
+
+        public DateTime ModifyDate { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
         #endregion
-       
+
     }
 
     [Table("ServiceReleaseInfo")]

@@ -56,5 +56,12 @@ namespace DerDataBusiness
         /// <returns></returns>
         bool ServiceAutoPrivi(string uid, string sourceId, string serviceType);
 
+        /// <summary>
+        /// 删除衍生品相关信息
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        bool ServiceDeleteDerdataRelationInfo(string Id);
+
     }
 }

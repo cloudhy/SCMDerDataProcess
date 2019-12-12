@@ -42,6 +42,8 @@
             this.buttonDerdataCheck = new System.Windows.Forms.Button();
             this.buttonGetDBSInfo = new System.Windows.Forms.Button();
             this.buttonGetUnPublishService = new System.Windows.Forms.Button();
+            this.buttonOneKey = new System.Windows.Forms.Button();
+            this.buttonDeleteDedataRelationInfo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,7 +65,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(51, 109);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(744, 319);
+            this.dataGridView1.Size = new System.Drawing.Size(1258, 458);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick_1);
             // 
@@ -74,7 +76,7 @@
             // 
             // buttonAddOP
             // 
-            this.buttonAddOP.Location = new System.Drawing.Point(603, 11);
+            this.buttonAddOP.Location = new System.Drawing.Point(592, 13);
             this.buttonAddOP.Name = "buttonAddOP";
             this.buttonAddOP.Size = new System.Drawing.Size(94, 23);
             this.buttonAddOP.TabIndex = 4;
@@ -85,7 +87,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(135, 133);
+            this.checkBox1.Location = new System.Drawing.Point(136, 112);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(15, 14);
             this.checkBox1.TabIndex = 5;
@@ -114,7 +116,7 @@
             // 
             // buttonPackageDBService
             // 
-            this.buttonPackageDBService.Location = new System.Drawing.Point(205, 50);
+            this.buttonPackageDBService.Location = new System.Drawing.Point(1006, 13);
             this.buttonPackageDBService.Name = "buttonPackageDBService";
             this.buttonPackageDBService.Size = new System.Drawing.Size(114, 23);
             this.buttonPackageDBService.TabIndex = 7;
@@ -124,7 +126,7 @@
             // 
             // buttonServiceCatalog
             // 
-            this.buttonServiceCatalog.Location = new System.Drawing.Point(345, 50);
+            this.buttonServiceCatalog.Location = new System.Drawing.Point(1138, 13);
             this.buttonServiceCatalog.Name = "buttonServiceCatalog";
             this.buttonServiceCatalog.Size = new System.Drawing.Size(75, 23);
             this.buttonServiceCatalog.TabIndex = 8;
@@ -134,7 +136,7 @@
             // 
             // buttonServicePublish
             // 
-            this.buttonServicePublish.Location = new System.Drawing.Point(603, 51);
+            this.buttonServicePublish.Location = new System.Drawing.Point(182, 51);
             this.buttonServicePublish.Name = "buttonServicePublish";
             this.buttonServicePublish.Size = new System.Drawing.Size(75, 23);
             this.buttonServicePublish.TabIndex = 9;
@@ -144,7 +146,7 @@
             // 
             // buttonServicePrivi
             // 
-            this.buttonServicePrivi.Location = new System.Drawing.Point(731, 51);
+            this.buttonServicePrivi.Location = new System.Drawing.Point(290, 51);
             this.buttonServicePrivi.Name = "buttonServicePrivi";
             this.buttonServicePrivi.Size = new System.Drawing.Size(75, 23);
             this.buttonServicePrivi.TabIndex = 10;
@@ -164,7 +166,7 @@
             // 
             // buttonGetDBSInfo
             // 
-            this.buttonGetDBSInfo.Location = new System.Drawing.Point(36, 50);
+            this.buttonGetDBSInfo.Location = new System.Drawing.Point(836, 13);
             this.buttonGetDBSInfo.Name = "buttonGetDBSInfo";
             this.buttonGetDBSInfo.Size = new System.Drawing.Size(135, 23);
             this.buttonGetDBSInfo.TabIndex = 12;
@@ -174,7 +176,7 @@
             // 
             // buttonGetUnPublishService
             // 
-            this.buttonGetUnPublishService.Location = new System.Drawing.Point(453, 50);
+            this.buttonGetUnPublishService.Location = new System.Drawing.Point(36, 51);
             this.buttonGetUnPublishService.Name = "buttonGetUnPublishService";
             this.buttonGetUnPublishService.Size = new System.Drawing.Size(105, 23);
             this.buttonGetUnPublishService.TabIndex = 13;
@@ -183,11 +185,33 @@
             this.buttonGetUnPublishService.UseVisualStyleBackColor = true;
             this.buttonGetUnPublishService.Click += new System.EventHandler(this.buttonGetUnPublishService_Click);
             // 
+            // buttonOneKey
+            // 
+            this.buttonOneKey.Location = new System.Drawing.Point(415, 50);
+            this.buttonOneKey.Name = "buttonOneKey";
+            this.buttonOneKey.Size = new System.Drawing.Size(131, 23);
+            this.buttonOneKey.TabIndex = 14;
+            this.buttonOneKey.Text = "一键发布授权";
+            this.buttonOneKey.UseVisualStyleBackColor = true;
+            this.buttonOneKey.Click += new System.EventHandler(this.buttonOneClick_Click);
+            // 
+            // buttonDeleteDedataRelationInfo
+            // 
+            this.buttonDeleteDedataRelationInfo.Location = new System.Drawing.Point(592, 49);
+            this.buttonDeleteDedataRelationInfo.Name = "buttonDeleteDedataRelationInfo";
+            this.buttonDeleteDedataRelationInfo.Size = new System.Drawing.Size(214, 23);
+            this.buttonDeleteDedataRelationInfo.TabIndex = 15;
+            this.buttonDeleteDedataRelationInfo.Text = "删除该衍生品所有信息";
+            this.buttonDeleteDedataRelationInfo.UseVisualStyleBackColor = true;
+            this.buttonDeleteDedataRelationInfo.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 440);
+            this.ClientSize = new System.Drawing.Size(1365, 579);
+            this.Controls.Add(this.buttonDeleteDedataRelationInfo);
+            this.Controls.Add(this.buttonOneKey);
             this.Controls.Add(this.buttonGetUnPublishService);
             this.Controls.Add(this.buttonGetDBSInfo);
             this.Controls.Add(this.buttonDerdataCheck);
@@ -225,6 +249,8 @@
         private System.Windows.Forms.Button buttonDerdataCheck;
         private System.Windows.Forms.Button buttonGetDBSInfo;
         private System.Windows.Forms.Button buttonGetUnPublishService;
+        private System.Windows.Forms.Button buttonOneKey;
+        private System.Windows.Forms.Button buttonDeleteDedataRelationInfo;
     }
 }
 

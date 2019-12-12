@@ -116,7 +116,7 @@ namespace DerDataBusiness
         /// <param name="Id"></param>
         /// <param name="DbId"></param>
         /// <param name="AccessKey"></param>
-        public static void AddOPara(string Id, string DBId, string AccessKey)
+        public static bool AddOPara(string Id, string DBId, string AccessKey)
         {
             try
             {
@@ -177,13 +177,15 @@ namespace DerDataBusiness
                         }
                     }
 
-
+                    return true;
 
                 }
             }
             catch (Exception ex)
             {
+                
                 Console.WriteLine("Error[{0}]:{1}", Id, ex.ToString());
+                return false;
             }
         }
 

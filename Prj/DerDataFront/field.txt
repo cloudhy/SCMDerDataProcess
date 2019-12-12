@@ -1,7 +1,28 @@
-﻿EnergyType                      能源种类
-MajorPollutantCategories        主要污染物类别
-PollutantTreatmentFacilities    污染物治理设施
-EnvironmentalPetitionSituation  环境信访情况
-SpecialTreatment                专项治理
+﻿ssdk	地块id
+dkm	地块名称
+syear	年
+cnt	新增注册企业数量
+sum_cnt	累计注册企业数量
+dk_area	地块面积平方米
+tax	税收金额（万元）
+sales	销售金额（万元）
+powers	用电量（万千瓦时）
+gas	燃气量（万立方米）
+water	供水量（吨）
+consstat	能耗汇总计算吨标煤
+tax_mavg	税收金额（万元）亩均
+sales_mavg	销售金额（万元）亩均
+powers_mavg	用电量（万千瓦时）亩均
+gas_mavg	燃气量（万立方米）亩均
+water_mavg	供水量（吨）亩均
+consstat_mavg	能耗汇总计算吨标煤亩均
+dk_mj	地块面积亩
+update_time	更新时间
+Name         名称
+Type         类型
+ShortName    简称
+Fuid         地块id
+Address      地址
+GEO          点位
 
 
