@@ -62,20 +62,12 @@ namespace DerDataBusiness
 
         }
 
+        public static Dictionary<string, string> dicField;
 
-
-
-        /// <summary>
-        /// 修改别名
-        /// </summary>
-        public static void ReviseAlias()
+        public static void ReadFieldFile()
         {
-            //string ConnStr = ConfigurationManager.AppSettings["scmdb"];
-            //SqlConnection conn = new SqlConnection(ConnStr);
             try
             {
-                conn.Open();
-
                 Dictionary<string, string> derDic = new Dictionary<string, string>();
                 StreamReader sr = new StreamReader(@"..\..\field.txt", Encoding.Default);
                 string line = string.Empty;
@@ -85,12 +77,39 @@ namespace DerDataBusiness
                     if (!derDic.ContainsKey(value[0]))
                         derDic.Add(value[0], value[1]);
                 }
+                dicField = derDic;
+
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+
+            }
+          
+        }
 
 
-                foreach (var item in derDic)
+
+
+        /// <summary>
+        /// 修改别名
+        /// </summary>
+        public static void ReviseAlias(string  derdataid)
+        {
+            //string ConnStr = ConfigurationManager.AppSettings["scmdb"];
+            //SqlConnection conn = new SqlConnection(ConnStr);
+            try
+            {
+                conn.Open();
+             
+                foreach (var item in dicField)
                 {
-                    string sql = "Update DerDataOParams Set Name = '{0}' where PKey = '{1}'";
-                    sql = string.Format(sql, item.Value, item.Key);
+                    string sql = "Update DerDataOParams Set Name = '{0}' where PKey = '{1}' " +
+                        "AND DId='{2}'";
+                    sql = string.Format(sql, item.Value, item.Key, derdataid);
                     conn.Execute(sql);
 
                     //sql = "Update DBSOParams Set Name = '{0}' where PKey = '{1}'";
@@ -177,6 +196,7 @@ namespace DerDataBusiness
                         }
                     }
 
+                    connDB.Close();
                     return true;
 
                 }

@@ -47,7 +47,8 @@ namespace DerDataFront
 
         private void buttonAddOP_Click(object sender, EventArgs e)
         {
-
+            //读取字段信息
+            ProcessService.ReadFieldFile();
             int count = dataGridView1.Rows.Count;
             try
             {
@@ -64,16 +65,12 @@ namespace DerDataFront
                         AccessType = this.dataGridView1.Rows[i].Cells[4].Value.ToString();
                         AccessKey = this.dataGridView1.Rows[i].Cells[5].Value.ToString();
                         ProcessService.AddOPara(Id, DbId, AccessKey);
-
+                        ProcessService.ReviseAlias(Id);
                     }
 
                 }
-
-                ProcessService.conn.Close();
-                ProcessService.ReviseAlias();
+            
                 MessageBox.Show("添加输出参数成功");
-
-
             }
             catch (Exception ex)
             {
@@ -359,6 +356,8 @@ namespace DerDataFront
         {
             int count = dataGridView1.Rows.Count;
             AutoService autoTotalService = new AutoService();
+            //读取字段信息
+            ProcessService.ReadFieldFile();
             try
             {
                 for (int i = 0; i < count; i++)
@@ -378,7 +377,7 @@ namespace DerDataFront
                             AccessKey = this.dataGridView1.Rows[i].Cells[5].Value.ToString();
                             var addParaResult = ProcessService.AddOPara(Id, DbId, AccessKey);
                             ProcessService.conn.Close();
-                            ProcessService.ReviseAlias();
+                            ProcessService.ReviseAlias(Id);
                             if (addParaResult == true)
                             {
                                 bool derdataCheckResult = autoTotalService.DerDataCheck(Id);
@@ -436,7 +435,12 @@ namespace DerDataFront
                         ///赋值
                         Id = this.dataGridView1.Rows[i].Cells[1].Value.ToString();
 
-                        autoTotalService.
+                        bool deleteResult=autoTotalService.ServiceDeleteDerdataRelationInfo(Id);
+
+                        if(deleteResult==true)
+                        {
+                            MessageBox.Show("删除成功");
+                        }
                     }
 
                 }

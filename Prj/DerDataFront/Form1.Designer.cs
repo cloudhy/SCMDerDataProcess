@@ -203,7 +203,7 @@
             this.buttonDeleteDedataRelationInfo.TabIndex = 15;
             this.buttonDeleteDedataRelationInfo.Text = "删除该衍生品所有信息";
             this.buttonDeleteDedataRelationInfo.UseVisualStyleBackColor = true;
-            this.buttonDeleteDedataRelationInfo.Click += new System.EventHandler(this.button1_Click);
+            this.buttonDeleteDedataRelationInfo.Click += new System.EventHandler(this.buttonDeleteDerdataRelationInfo_Click);
             // 
             // Form1
             // 
